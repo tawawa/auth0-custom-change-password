@@ -1,0 +1,86 @@
+# What is it?
+
+It provides a solution to customization of the Auth0 change password flow such that old password must be successfully entered
+prior to accepting a new password. Furthermore, no password verification email is sent out with the change password update.
+
+
+## Running locally
+
+To run the sample extension locally:
+
+Rename `.env.sample` as `.env` and add the required values for each key value pair.
+
+```bash
+$ npm install
+$ npm start
+```
+
+The Client Id is the id of a Client you define in the Dashboard for your Auth0 Tenant with a Database Connection to the Connection
+users shall be using to login with.
+
+The Connection Name is the name of your DB Connection associated with the users logging in eg. Initial-Connection, DBConn etc
+
+The Management Token needs to have `update user` privileges.
+
+See [here](https://auth0.com/docs/api/management/v2#!/Users/patch_users_by_id) for details.
+
+So the Management Token should have `update:user` and `update:users_app_metadata` scopes assigned.
+
+Create a Client in Dashboard of type `Non-Interactive Client` and assign to Auth0 Management API with correct scopes
+
+
+## Deploying as Webtask 
+
+Rename `.env.sample` as `.env` and add the required values for each key value pair.
+
+```bash
+$ ./deploy 
+```
+
+
+This is equivalent to running something like:
+
+```
+wt create --name password-reset --profile <my-tenant>-default build/bundle.js \
+--secret AUTH0_DOMAIN="<my-tenant>.auth0.com" \
+--secret AUTH0_CLIENT_ID="K8g5hMEnxxxxxxxxTemvc1xPK7m" \
+--secret AUTH0_CLIENT_SECRET="eyJhbGcxxxxxx...rrw" 
+--secret AUTH0_CONNECTION_NAME="<my-db-connection-name>" \
+```
+
+The webtask should now be running.
+
+Go to:
+
+Your webtask URL `/change` to initiate the flow.
+
+eg. `https://<my-tenant>.us.webtask.io/password-reset/change`
+
+
+## What is Auth0?
+
+Auth0 helps you to:
+
+* Add authentication with [multiple authentication sources](https://docs.auth0.com/identityproviders), either social like **Google, Facebook, Microsoft Account, LinkedIn, GitHub, Twitter, Box, Salesforce, amont others**, or enterprise identity systems like **Windows Azure AD, Google Apps, Active Directory, ADFS or any SAML Identity Provider**.
+* Add authentication through more traditional **[username/password databases](https://docs.auth0.com/mysql-connection-tutorial)**.
+* Add support for **[linking different user accounts](https://docs.auth0.com/link-accounts)** with the same user.
+* Support for generating signed [Json Web Tokens](https://docs.auth0.com/jwt) to call your APIs and **flow the user identity** securely.
+* Analytics of how, when and where users are logging in.
+* Pull data from other sources and add it to the user profile, through [JavaScript rules](https://docs.auth0.com/rules).
+
+## Create a free Auth0 Account
+
+1. Go to [Auth0](https://auth0.com/signup) and click Sign Up.
+2. Use Google, GitHub or Microsoft Account to login.
+
+## Issue Reporting
+
+If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.
+
+## Author
+
+[Auth0](auth0.com)
+
+## License
+
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more info.
