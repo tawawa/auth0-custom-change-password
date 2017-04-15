@@ -1,11 +1,12 @@
 'use strict';
 
+var cookieSession = require('cookie-session');
 var express = require('express');
 var csrf = require('csurf');
-var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser');
 var metadata = require('./webtask.json');
 var request = require('request');
+var helmet = require('helmet');
 var jwtDecode = require('jwt-decode');
 var config = require('./config');
 
@@ -14,10 +15,18 @@ const assert = require('assert');
 var mgmtToken = require('./resources/mgmtToken');
 
 var app = express();
+app.use(helmet());
 app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({extended: false}));
-app.use(cookieParser());
-var csrfProtection = csrf({ cookie: true });
+
+app.use(cookieSession({
+  name: 'id',
+  keys: ['rw79EJErGmeTwznH'],
+  maxAge: 1000 * 60 * 5,  // five minutes only
+  // secure: true,         // uncomment this for PRD when TLS enabled
+  httpOnly: true
+}));
+
+var csrfProtection = csrf();
 var parseForm = bodyParser.urlencoded({ extended: false });
 
 app.use(function (req, res, next) {
